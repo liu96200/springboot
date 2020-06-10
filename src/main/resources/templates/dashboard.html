@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>医疗冷链智慧监测系统</title>
+	<!-- Bootstrap core CSS -->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link th:href="@{/css/dashboard.css}" rel="stylesheet">
+	<style type="text/css">
+		/* Chart.js */
+
+		@-webkit-keyframes chartjs-render-animation {
+			from {
+				opacity: 0.99
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		@keyframes chartjs-render-animation {
+			from {
+				opacity: 0.99
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		.chartjs-render-monitor {
+			-webkit-animation: chartjs-render-animation 0.001s;
+			animation: chartjs-render-animation 0.001s;
+		}
+	</style>
+</head>
+
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+	<div class="navbar-brand col-sm-3 col-md-2 mr-0" >欢迎您, <span th:text="${session.username}"> </span></div>
+	<input class="form-control form-control-dark w-100"  type="text" placeholder="Search" aria-label="Search" >
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+			<a class="nav-link" href="/index">退出</a>
+		</li>
+	</ul>
+</nav>
+
+<div class="container-fluid" >
+	<div class="row" >
+		<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+			<div class="sidebar-sticky">
+				<ul class="nav flex-column">
+					<li class="nav-item">
+						<a class="nav-link active" href="/dashboard">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+								<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+								<polyline points="9 22 9 12 15 12 15 22"></polyline>
+							</svg>
+							实时温度
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/humidity">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+								<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+								<polyline points="13 2 13 9 20 9"></polyline>
+							</svg>
+							实时湿度
+						</a>
+					</li>
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" href="/threshold">-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">-->
+<!--								<circle cx="9" cy="21" r="1"></circle>-->
+<!--								<circle cx="20" cy="21" r="1"></circle>-->
+<!--								<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>-->
+<!--							</svg>-->
+<!--							阈值设定-->
+<!--						</a>-->
+<!--					</li>-->
+					<li class="nav-item">
+						<a class="nav-link" href="/list">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
+								<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+								<circle cx="9" cy="7" r="4"></circle>
+								<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+								<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+							</svg>
+							用户查看
+						</a>
+					</li>
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">-->
+<!--								<line x1="18" y1="20" x2="18" y2="10"></line>-->
+<!--								<line x1="12" y1="20" x2="12" y2="4"></line>-->
+<!--								<line x1="6" y1="20" x2="6" y2="14"></line>-->
+<!--							</svg>-->
+<!--							Reports-->
+<!--						</a>-->
+<!--					</li>-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">-->
+<!--								<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>-->
+<!--								<polyline points="2 17 12 22 22 17"></polyline>-->
+<!--								<polyline points="2 12 12 17 22 12"></polyline>-->
+<!--							</svg>-->
+<!--							Integrations-->
+<!--						</a>-->
+<!--					</li>-->
+				</ul>
+
+<!--				<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">-->
+<!--					<span>其他</span>-->
+<!--					<a class="d-flex align-items-center text-muted"  >-->
+<!--						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>-->
+<!--					</a>-->
+<!--				</h6>-->
+<!--				<ul class="nav flex-column mb-2">-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" >-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">-->
+<!--								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--								<polyline points="14 2 14 8 20 8"></polyline>-->
+<!--								<line x1="16" y1="13" x2="8" y2="13"></line>-->
+<!--								<line x1="16" y1="17" x2="8" y2="17"></line>-->
+<!--								<polyline points="10 9 9 9 8 9"></polyline>-->
+<!--							</svg>-->
+<!--							developing_1-->
+<!--						</a>-->
+<!--					</li>-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" >-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">-->
+<!--								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--								<polyline points="14 2 14 8 20 8"></polyline>-->
+<!--								<line x1="16" y1="13" x2="8" y2="13"></line>-->
+<!--								<line x1="16" y1="17" x2="8" y2="17"></line>-->
+<!--								<polyline points="10 9 9 9 8 9"></polyline>-->
+<!--							</svg>-->
+<!--							developing_2-->
+<!--						</a>-->
+<!--					</li>-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" >-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">-->
+<!--								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--								<polyline points="14 2 14 8 20 8"></polyline>-->
+<!--								<line x1="16" y1="13" x2="8" y2="13"></line>-->
+<!--								<line x1="16" y1="17" x2="8" y2="17"></line>-->
+<!--								<polyline points="10 9 9 9 8 9"></polyline>-->
+<!--							</svg>-->
+<!--							developing_3-->
+<!--						</a>-->
+<!--					</li>-->
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link" >-->
+<!--							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">-->
+<!--								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>-->
+<!--								<polyline points="14 2 14 8 20 8"></polyline>-->
+<!--								<line x1="16" y1="13" x2="8" y2="13"></line>-->
+<!--								<line x1="16" y1="17" x2="8" y2="17"></line>-->
+<!--								<polyline points="10 9 9 9 8 9"></polyline>-->
+<!--							</svg>-->
+<!--							developing_4-->
+<!--						</a>-->
+<!--					</li>-->
+<!--				</ul>-->
+			</div>
+		</nav>
+
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+			<div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+				<div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+					<div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+				</div>
+				<div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+					<div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+				</div>
+			</div>
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+				<h1 class="h2">实时温度(MOCK)</h1>
+				<div class="btn-toolbar mb-2 mb-md-0">
+					<div class="btn-group mr-2">
+						<a class="btn btn-sm btn-outline-secondary"  href="/getDevice">重连设备</a>
+					</div>
+					<p style="color: red;" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+				</div>
+			</div>
+
+			<canvas class="my-4 chartjs-render-monitor" id="main" width="1200" height="500" style="display: block; width: 1300px; height: 600px;"></canvas>
+
+
+		</main>
+	</div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js}" ></script>
+<script type="text/javascript" th:src="@{/js/popper.min.js}" ></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+<script type="text/javascript" th:src="@{js/echarts.min.js}"></script>
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/js/feather.min.js}" ></script>
+<script>
+	feather.replace()
+</script>
+
+<!-- Graphs -->
+<script type="text/javascript" th:src="@{/js/echarts.min.js}"></script>
+<script type="text/javascript">
+
+		// 基于准备好的dom，初始化echarts实例
+		var myChart = echarts.init(document.getElementById('main'));
+		myChart.showLoading();//数据加载完之前先显示一段简单的loading动画
+		var id=[];    //横坐标数组（实际用来盛放X轴坐标值）
+		var values=[];    //纵坐标数组（实际用来盛放Y坐标值）
+		var option = {
+			//加载数据图表
+			title:{
+					text:[],
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+					label: {
+						backgroundColor: '#6a7985'
+					}
+				}
+			},
+			toolbox: {
+				feature: {
+					saveAsImage: {}
+				}
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+			xAxis: [
+				{
+					name:'时间',
+					splitLine:{show: true},//x轴网格 是否显示
+
+					type: 'category',
+					boundaryGap: false,
+					data: [],
+					axisLine: {
+						symbol: ['none', 'arrow'],//是否显示 箭头
+					}
+				}
+			],
+			yAxis: [
+				{
+					name:'温度',
+					type: 'value',
+					axisLine: {
+						symbol: ['none', 'arrow'],//是否显示 箭头
+					}
+				}
+			],
+			series: [
+				{
+					symbolSize:10, //折线点的大小
+					type: 'line',
+					areaStyle: {},
+					data: []
+				},
+			]
+		};
+	setInterval(function () { //每3秒刷新一次请求
+		$.ajax({
+			type : "post",
+			async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+			url : "/ShowInfoIndexServlet",    //请求发送到dataActiont处
+			data : {},
+			dataType : "json",        //返回数据形式为json
+			success : function(result) {
+				//请求成功时执行该函数内容，result即为服务器返回的json对象
+				if (result) {
+					for (var i = result.length - 6; i < result.length; i++) {
+						if(i<result.length-1)
+						id.push(result[i].id);
+						values.push(result[i].wd);
+					}
+				}
+				var t = new Date();//获取当前时间
+				var hour = t.getHours();
+				var minute = t.getMinutes();
+				var second = t.getSeconds();
+				id.push(hour+"时"+minute+"分"+second+"秒");
+				option.title.text=values[5]+'℃';
+				option.xAxis[0].data=id;
+				option.series[0].data=values;
+				myChart.hideLoading();
+				myChart.setOption(option);
+				id=[];
+				values=[];
+			}
+		});//end ajax
+	}, 3000);
+
+</script>
+
+</body>
+
+</html>

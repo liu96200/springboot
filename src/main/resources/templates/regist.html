@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>医疗冷链智慧监测系统</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/signin.css}" rel="stylesheet">
+</head>
+
+<body class="text-center" th:style="'background-image: url(/asserts/img/index-back.jpg)'">
+<form class="form-signin"  th:action="@{/doRegist}" method="post">
+
+
+    <img class="mb-4" th:src="@{/img/bootstrap-solid.svg}" alt="" width="72" height="72"><br/><br/><br/>
+
+    <p style="color: red;" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+    <h1 class="h3 mb-3 font-weight-normal" >医疗冷链智慧监测系统</h1><br/>
+
+    <label class="sr-only">username</label>
+    <input type="text" class="form-control" id="username" name="username" placeholder="4到16位，为字母大小写，数字或下划线" required="" autofocus="">
+    <label class="sr-only">password</label>
+    <input type="password"  id="password"  name="password" class="form-control" placeholder="密码最少为2位，支持字母大小写，数字"  required="">
+    <label class="sr-only">email</label>
+    <input type="text" class="form-control" id="email" name="email" placeholder="填写你的邮箱" required="" autofocus="">
+    <label class="sr-only">tel</label>
+    <input type="text" class="form-control" id="tel" name="tel" placeholder="填写你的手机号码" required="" autofocus=""><br/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+    <a class="btn btn-lg btn-primary btn-block" href="/index">返回登录</a>
+    <p class="mt-5 mb-3 text-muted " >© 2019-2020</p>
+</form>
+
+</body>
+
+</html>

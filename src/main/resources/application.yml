@@ -1,0 +1,26 @@
+spring:
+  resources:
+    static-locations: classpath:/static/
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    check-template: true
+    check-template-location: true
+    #禁用缓存
+    cache: false
+    servlet:
+      content-type: text/html
+  datasource:
+      url: jdbc:mysql://localhost:3306/login?serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari: # springboot 2.0 整合了hikari ,据说这是目前性能最好的java数据库连接池
+        username: root
+        password: 123456
+  jpa:
+      hibernate:
+    #     更新或者创建数据表结构
+        ddl-auto: update
+    #    控制台显示SQL
+      show-sql: true
+      database: mysql

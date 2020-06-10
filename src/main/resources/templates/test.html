@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <!-- 引入 echarts.js -->
+    <script th:src="@{/js/echarts.min.js}"></script>
+</head>
+<body>
+<div id="main" class="my-4 chartjs-render-monitor"  width="1076" height="454" style="display: block; width: 1076px; height: 454px;"></div>
+<script type="text/javascript" th:src="@{/js/echarts.min.js}"></script>
+<script type="text/javascript">
+    $(function(){
+        setInterval(function(){setChartLine()}, 3*1000);    // 间歇执行
+    });
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading();//数据加载完之前先显示一段简单的loading动画
+        var id=[];    //横坐标数组（实际用来盛放X轴坐标值）
+        var values=[];    //纵坐标数组（实际用来盛放Y坐标值）
+        var option = {
+            //加载数据图表
+            title: {
+                text: '堆叠区域图'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: id
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+
+                }
+            ],
+            series: [
+                {
+                    name: '邮件营销',
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data: values
+                },
+            ]
+        };
+        $.ajax({
+            type : "post",
+            async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "/ShowInfoIndexServlet",    //请求发送到dataActiont处
+            data : {},
+            dataType : "json",        //返回数据形式为json
+            success : function(result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for (var i = result.length - 6; i < result.length; i++) {
+                        id.push(result[i].id);
+                        values.push(result[i].wd);
+                    }
+                }
+                myChart.hideLoading();
+                myChart.setOption(option);
+            }
+        });//end ajax
+
+
+
+</script>
+</body>
+</html>
